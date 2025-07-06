@@ -36,9 +36,8 @@ const initChart = () => {
   }
   
   chart = new Chart(chartCanvas.value, {
-    type: 'line',
+    type: 'scatter',
     data: {
-      labels: [],
       datasets: [{
         label: 'Speed (km/h)',
         data: [],
@@ -74,6 +73,8 @@ const initChart = () => {
       },
       scales: {
         x: {
+          min: -500,
+          max: 500,
           title: {
             display: true,
             text: 'Position Z',
@@ -83,7 +84,7 @@ const initChart = () => {
             }
           },
           ticks: {
-            maxTicksLimit: 6,
+            stepSize: 100,
             font: {
               size: 12
             }
@@ -127,8 +128,10 @@ watch(
     // 유효한 데이터가 있을 때만 추가
     if (typeof newSpeed === 'number' && typeof newPositionZ === 'number') {
       // 데이터 추가
-      chart.data.labels.push(Math.round(newPositionZ))
-      chart.data.datasets[0].data.push(newSpeed)
+        chart.data.datasets[0].data.push({
+          x: Math.round(newPositionZ),
+          y: newSpeed
+        })
       
       // 최대 50개 데이터 포인트 유지
       if (chart.data.labels.length > 50) {
